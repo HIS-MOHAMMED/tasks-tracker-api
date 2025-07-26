@@ -5,20 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="tasks")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-public class Task {
+@Table(name="task_lists")
+public class TaskList {
 
     @Id
+    @Column(name="id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="id", updatable = false,nullable = false)
     private UUID id;
 
     @Column(name="title", nullable = false)
@@ -27,22 +23,12 @@ public class Task {
     @Column(name="description")
     private String description;
 
-    @Column(name="due_date", nullable = false)
-    private LocalDateTime dueDate;
+    @OneToMany(mappedBy = "task_list", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Task> tasks;
 
     @Column(name="created_date", nullable = false)
     private LocalDateTime createdDate;
 
     @Column(name="updated_date", nullable = false)
     private LocalDateTime updatedDate;
-
-    @Column(name="task_status", nullable = false)
-    private TaskStatus taskStatus;
-
-    @Column(name="task_priority", nullable = false)
-    private TaskPriority taskPriority;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="task_list_id")
-    private TaskList taskList;
 }
