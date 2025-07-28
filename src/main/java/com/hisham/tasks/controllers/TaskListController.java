@@ -1,0 +1,35 @@
+package com.hisham.tasks.controllers;
+
+import com.hisham.tasks.domain.dto.TaskListDto;
+import com.hisham.tasks.domain.entities.TaskList;
+import com.hisham.tasks.mappers.TaskListMapper;
+import com.hisham.tasks.services.TaskListService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping(path = "/api/task-lists")
+public class TaskListController {
+
+    private final TaskListService taskListService;
+    private final TaskListMapper taskListMapper;
+
+    public TaskListController(TaskListService taskListService, TaskListMapper taskListMapper) {
+        this.taskListService = taskListService;
+        this.taskListMapper = taskListMapper;
+    }
+
+    @GetMapping
+    public List<TaskListDto> listTaskLists(){
+        return taskListService.listTaskLists().stream().map(taskListMapper::toDto).toList();
+    }
+
+    @PostMapping
+    public TaskListDto createTaskList(@RequestBody TaskListDto taskListDto){
+        TaskList createdTaskList = taskListService.createTaskList(taskListMapper.fromDto(taskListDto));
+        return taskListMapper.toDto(createdTaskList);
+    }
+}
