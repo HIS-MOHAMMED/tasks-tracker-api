@@ -25,7 +25,7 @@ public class TaskList {
     @Column(name="description")
     private String description;
 
-    @OneToMany(mappedBy = "task_list", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "taskList", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Task> tasks;
 
     @Column(name="created_date", nullable = false)
