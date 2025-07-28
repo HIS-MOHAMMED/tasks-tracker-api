@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name="task_lists")
+@AllArgsConstructor
+@Data
 public class TaskList {
 
     @Id
