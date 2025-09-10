@@ -1,13 +1,14 @@
 package com.hisham.tasks.services.Impl;
 
+import com.hisham.tasks.domain.dto.TaskListDto;
 import com.hisham.tasks.domain.entities.TaskList;
 import com.hisham.tasks.repositories.TaskListRepository;
 import com.hisham.tasks.services.TaskListService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,5 +49,23 @@ public class TaskListServiceImpl implements TaskListService {
     @Override
     public Optional<TaskList> getTaskList(UUID id) {
         return taskListRepository.findById(id);
+    }
+
+    @Override
+    public TaskList updateTaskList(UUID taskListId, TaskList taskList) {
+        if(taskList.getId() == null){
+            throw new IllegalArgumentException("Task list mush have an ID!");
+        }
+        if(!Objects.equals(taskListId,taskList.getId())){
+            throw  new IllegalArgumentException("Attempting to change task list ID, this is not permitted!");
+        }
+
+        TaskList existingTaskList = taskListRepository.findById(taskListId).orElseThrow(()-> new IllegalArgumentException("Task list not found!"));
+
+        existingTaskList.setTitle(taskList.getTitle());
+        existingTaskList.setDescription(taskList.getDescription());
+        existingTaskList.setUpdatedDate(LocalDateTime.now());
+
+        return taskListRepository.save(existingTaskList);
     }
 }
