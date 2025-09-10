@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name="task_lists")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class TaskList {
 
