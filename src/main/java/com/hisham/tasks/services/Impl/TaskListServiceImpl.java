@@ -13,7 +13,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class TaskListServiceImpl implements TaskListService {
+public class
+TaskListServiceImpl implements TaskListService {
 
     private final TaskListRepository taskListRepository;
 
@@ -54,18 +55,24 @@ public class TaskListServiceImpl implements TaskListService {
     @Override
     public TaskList updateTaskList(UUID taskListId, TaskList taskList) {
         if(taskList.getId() == null){
-            throw new IllegalArgumentException("Task list mush have an ID!");
+            throw new IllegalArgumentException("Task list must have an ID!");
         }
         if(!Objects.equals(taskListId,taskList.getId())){
             throw  new IllegalArgumentException("Attempting to change task list ID, this is not permitted!");
         }
 
-        TaskList existingTaskList = taskListRepository.findById(taskListId).orElseThrow(()-> new IllegalArgumentException("Task list not found!"));
+        TaskList existingTaskList = taskListRepository.findById(taskListId).orElseThrow(
+                ()-> new IllegalArgumentException("Task list not found!"));
 
         existingTaskList.setTitle(taskList.getTitle());
         existingTaskList.setDescription(taskList.getDescription());
         existingTaskList.setUpdatedDate(LocalDateTime.now());
 
         return taskListRepository.save(existingTaskList);
+    }
+
+    @Override
+    public void deleteTaskList(UUID taskListId) {
+        taskListRepository.deleteById(taskListId);
     }
 }

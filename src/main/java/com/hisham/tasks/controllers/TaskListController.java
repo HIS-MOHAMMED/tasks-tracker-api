@@ -5,6 +5,7 @@ import com.hisham.tasks.domain.entities.TaskList;
 import com.hisham.tasks.mappers.TaskListMapper;
 import com.hisham.tasks.services.TaskListService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.PartHttpMessageWriter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,5 +48,10 @@ public class TaskListController {
                 taskListId,
                 taskListMapper.fromDto(taskListDto));
         return taskListMapper.toDto(updatedTaskList);
+    }
+
+    @DeleteMapping(path = "/{task_list_id}")
+    public void deleteTaskList(@PathVariable("task_list_id") UUID taskListId){
+        taskListService.deleteTaskList(taskListId);
     }
 }
