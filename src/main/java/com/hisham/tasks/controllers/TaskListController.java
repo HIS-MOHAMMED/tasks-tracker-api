@@ -36,22 +36,28 @@ public class TaskListController {
     }
 
     @GetMapping(path = "/{task_list_id}")
-    public Optional<TaskListDto> getTaskList(@PathVariable("task_list_id")UUID taskListId){
-        return taskListService.getTaskList(taskListId).map(taskListMapper::toDto);
+    public ResponseEntity<TaskListDto> getTaskList(@PathVariable("task_list_id")UUID taskListId){
+        return taskListService.getTaskList(taskListId)
+                .map(taskListMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping(path = "/{task_list_id}")
-    public TaskListDto updateTaskList(@PathVariable("task_list_id") UUID taskListId,
+    public ResponseEntity<TaskListDto> updateTaskList(@PathVariable("task_list_id") UUID taskListId,
                                       @RequestBody TaskListDto taskListDto)
     {
-        TaskList updatedTaskList = taskListService.updateTaskList(
+        return taskListService.updateTaskList(
                 taskListId,
-                taskListMapper.fromDto(taskListDto));
-        return taskListMapper.toDto(updatedTaskList);
+                taskListMapper.fromDto(taskListDto))
+                .map(taskListMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path = "/{task_list_id}")
-    public void deleteTaskList(@PathVariable("task_list_id") UUID taskListId){
+    public ResponseEntity<Void> deleteTaskList(@PathVariable("task_list_id") UUID taskListId){
         taskListService.deleteTaskList(taskListId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -91,11 +91,11 @@ public class TaskListServiceTests {
         when(taskListRepository.findById(any(UUID.class))).thenReturn(Optional.of(taskList1));
         when(taskListRepository.save(Mockito.any(TaskList.class))).thenReturn(taskList1);
 
-        TaskList updatedTaskList = taskListService.updateTaskList(taskList1.getId(),taskList2);
+        Optional<TaskList> updatedTaskList = taskListService.updateTaskList(taskList1.getId(),taskList2);
 
         Assertions.assertThat(updatedTaskList).isNotNull();
-        Assertions.assertThat(updatedTaskList.getTitle()).isEqualTo("English");
-        Assertions.assertThat(updatedTaskList.getDescription()).isEqualTo("This is a English task list.");
+        Assertions.assertThat(updatedTaskList.get().getTitle()).isEqualTo("English");
+        Assertions.assertThat(updatedTaskList.get().getDescription()).isEqualTo("This is a English task list.");
         verify(taskListRepository, times(1)).findById(taskList1.getId());
         verify(taskListRepository, times(1)).save(taskList1);
     }

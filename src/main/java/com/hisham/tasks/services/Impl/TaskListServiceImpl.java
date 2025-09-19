@@ -53,7 +53,7 @@ TaskListServiceImpl implements TaskListService {
     }
 
     @Override
-    public TaskList updateTaskList(UUID taskListId, TaskList taskList) {
+    public Optional<TaskList> updateTaskList(UUID taskListId, TaskList taskList) {
         if(taskList.getId() == null){
             throw new IllegalArgumentException("Task list must have an ID!");
         }
@@ -68,7 +68,7 @@ TaskListServiceImpl implements TaskListService {
         existingTaskList.setDescription(taskList.getDescription());
         existingTaskList.setUpdatedDate(LocalDateTime.now());
 
-        return taskListRepository.save(existingTaskList);
+        return Optional.of(taskListRepository.save(existingTaskList));
     }
 
     @Override
