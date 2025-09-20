@@ -65,6 +65,7 @@ public class TaskListServiceTests {
     @Test
     public void taskListService_GetTaskList_ReturnOptionalTaskList(){
         TaskList taskList = TaskList.builder()
+                .id(UUID.randomUUID())
                 .title("Study")
                 .description("This is a study task list.").build();
 
