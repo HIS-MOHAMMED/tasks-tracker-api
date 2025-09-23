@@ -4,9 +4,11 @@ import com.hisham.tasks.domain.dto.TaskDto;
 import com.hisham.tasks.domain.entities.Task;
 import com.hisham.tasks.mappers.TaskMapper;
 import com.hisham.tasks.services.TaskService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -32,5 +34,11 @@ public class TaskController {
     public TaskDto createTask(@PathVariable("task_list_id") UUID taskListId, @RequestBody TaskDto taskDto){
         Task createdTask = taskService.createTask(taskListId,taskMapper.fromDto(taskDto));
         return taskMapper.toDto(createdTask);
+    }
+    @GetMapping(path = "/{task_id}")
+    public ResponseEntity<Optional<TaskDto>> getTask(@PathVariable("task_list_id") UUID taskListId, @PathVariable("task_id") UUID taskId){
+        return ResponseEntity.ok(taskService
+                .getTask(taskListId, taskId)
+                .map(taskMapper::toDto));
     }
 }
