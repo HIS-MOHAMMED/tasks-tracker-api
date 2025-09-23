@@ -1,7 +1,6 @@
 package com.hisham.tasks.exceptions;
 
 import com.hisham.tasks.domain.dto.ErrorResponse;
-import com.hisham.tasks.domain.entities.Task;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,5 +34,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleTaskNotFoundException(TaskNotFoundException taskNotFoundException){
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),taskNotFoundException.getMessage(),"none");
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({TaskLIstAlreadyHasIdException.class})
+    public ResponseEntity<?> handleTaskListAlreadyHasIdException(TaskLIstAlreadyHasIdException taskLIstAlreadyHasId){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), taskLIstAlreadyHasId.getMessage(), "noe");
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({TaskAlreadyHasIdException.class})
+    public ResponseEntity<?> handleTaskAlreadyHasIdException(TaskAlreadyHasIdException taskAlreadyHasId){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), taskAlreadyHasId.getMessage(), "noe");
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }
