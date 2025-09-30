@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ErrorResponse> handleExceptions(
-            RuntimeException ex, WebRequest request
+            IllegalArgumentException ex, WebRequest request
     ){
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
@@ -25,26 +25,46 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({TaskListNotFoundException.class})
-    public ResponseEntity<?> handleTaskListNotFoundException(TaskListNotFoundException taskListNotFoundException){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),taskListNotFoundException.getMessage(),"none");
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleTaskListNotFoundException
+            (TaskListNotFoundException taskListNotFoundException,WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                taskListNotFoundException.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({TaskNotFoundException.class})
-    public ResponseEntity<?> handleTaskNotFoundException(TaskNotFoundException taskNotFoundException){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),taskNotFoundException.getMessage(),"none");
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> handleTaskNotFoundException
+            (TaskNotFoundException taskNotFoundException, WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                taskNotFoundException.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({TaskLIstAlreadyHasIdException.class})
-    public ResponseEntity<?> handleTaskListAlreadyHasIdException(TaskLIstAlreadyHasIdException taskLIstAlreadyHasId){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), taskLIstAlreadyHasId.getMessage(), "noe");
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleTaskListAlreadyHasIdException
+            (TaskLIstAlreadyHasIdException taskLIstAlreadyHasId, WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                taskLIstAlreadyHasId.getMessage(),
+                webRequest.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({TaskAlreadyHasIdException.class})
-    public ResponseEntity<?> handleTaskAlreadyHasIdException(TaskAlreadyHasIdException taskAlreadyHasId){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), taskAlreadyHasId.getMessage(), "noe");
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleTaskAlreadyHasIdException
+            (TaskAlreadyHasIdException taskAlreadyHasId, WebRequest webRequest){
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                taskAlreadyHasId.getMessage(),
+                webRequest.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
