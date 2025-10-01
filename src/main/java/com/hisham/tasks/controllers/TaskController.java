@@ -1,8 +1,8 @@
 package com.hisham.tasks.controllers;
 
 import com.hisham.tasks.domain.dto.TaskDto;
-import com.hisham.tasks.domain.entities.Task;
 import com.hisham.tasks.mappers.TaskMapper;
+import com.hisham.tasks.services.TaskListService;
 import com.hisham.tasks.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,12 @@ import java.util.UUID;
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
+    private final TaskListService taskListService;
 
-    public TaskController(TaskService taskService, TaskMapper taskMapper) {
+    public TaskController(TaskService taskService, TaskMapper taskMapper, TaskListService taskListService) {
         this.taskService = taskService;
         this.taskMapper = taskMapper;
+        this.taskListService = taskListService;
     }
 
     @GetMapping
@@ -32,8 +34,9 @@ public class TaskController {
 
     @PostMapping
     public TaskDto createTask(@PathVariable("task_list_id") UUID taskListId, @RequestBody TaskDto taskDto){
-        Task createdTask = taskService.createTask(taskListId,taskMapper.fromDto(taskDto));
-        return taskMapper.toDto(createdTask);
+        return taskMapper.toDto(taskService
+                .createTask(taskListId, taskMapper
+                        .fromDto(taskDto)));
     }
     @GetMapping(path = "/{task_id}")
     public ResponseEntity<Optional<TaskDto>> getTask(@PathVariable("task_list_id") UUID taskListId, @PathVariable("task_id") UUID taskId){

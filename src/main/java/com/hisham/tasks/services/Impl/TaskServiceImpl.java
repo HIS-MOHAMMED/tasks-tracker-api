@@ -2,7 +2,10 @@ package com.hisham.tasks.services.Impl;
 
 import com.hisham.tasks.domain.entities.Task;
 import com.hisham.tasks.domain.entities.TaskList;
+import com.hisham.tasks.domain.entities.TaskPriority;
 import com.hisham.tasks.domain.entities.TaskStatus;
+import com.hisham.tasks.exceptions.TaskAlreadyHasIdException;
+import com.hisham.tasks.exceptions.TaskListNotFoundException;
 import com.hisham.tasks.repositories.TaskListRepository;
 import com.hisham.tasks.repositories.TaskRepository;
 import com.hisham.tasks.services.TaskService;
@@ -29,16 +32,26 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(UUID taskListId, Task task) {
-        TaskList taskList = taskListRepository.findById(taskListId).orElseThrow(
-                ()-> new IllegalArgumentException("Task list not found!"));
+        if(task.getId() != null){
+            throw new TaskAlreadyHasIdException("task already has an ID!");
+        }
+        if(task.getTitle() == null || task.getTitle().isBlank()){
+            throw new IllegalArgumentException("task must have a title!");
+        }
+
+        TaskPriority taskPriority = Optional.ofNullable(task.getTaskPriority()).orElse(TaskPriority.MEDIUM);
+        TaskStatus taskStatus = TaskStatus.open;
+
+        TaskList taskList = taskListRepository.findById(taskListId).orElseThrow(() -> new TaskListNotFoundException("Invalid task list ID provided!"));
+
         LocalDateTime now = LocalDateTime.now();
         return taskRepository.save(new Task(
                 null,
                 task.getTitle(),
                 task.getDescription(),
                 task.getDueDate(),
-                task.getTaskPriority(),
-                TaskStatus.open,
+                taskPriority,
+                taskStatus,
                 taskList,
                 now,
                 now
