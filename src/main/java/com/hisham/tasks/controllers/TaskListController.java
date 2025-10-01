@@ -4,6 +4,8 @@ import com.hisham.tasks.domain.dto.TaskListDto;
 import com.hisham.tasks.domain.entities.TaskList;
 import com.hisham.tasks.mappers.TaskListMapper;
 import com.hisham.tasks.services.TaskListService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.PartHttpMessageWriter;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +39,10 @@ public class TaskListController {
 
     @GetMapping(path = "/{task_list_id}")
     public ResponseEntity<TaskListDto> getTaskList(@PathVariable("task_list_id")UUID taskListId){
-        return taskListService.getTaskList(taskListId)
-                .map(taskListMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        TaskList taskList = taskListService.getTaskList(taskListId);
+        TaskListDto taskListDto = taskListMapper.toDto(taskList);
+
+        return ResponseEntity.ok(taskListDto);
     }
 
     @PutMapping(path = "/{task_list_id}")

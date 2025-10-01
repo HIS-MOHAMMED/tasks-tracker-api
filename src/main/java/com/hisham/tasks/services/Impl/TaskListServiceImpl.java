@@ -2,6 +2,7 @@ package com.hisham.tasks.services.Impl;
 
 import com.hisham.tasks.domain.dto.TaskListDto;
 import com.hisham.tasks.domain.entities.TaskList;
+import com.hisham.tasks.exceptions.TaskListNotFoundException;
 import com.hisham.tasks.repositories.TaskListRepository;
 import com.hisham.tasks.services.TaskListService;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,8 @@ TaskListServiceImpl implements TaskListService {
     }
 
     @Override
-    public Optional<TaskList> getTaskList(UUID id) {
-        return taskListRepository.findById(id);
+    public TaskList getTaskList(UUID id) {
+        return taskListRepository.findById(id).orElseThrow(()-> new TaskListNotFoundException("Task list not found !"));
     }
 
     @Override

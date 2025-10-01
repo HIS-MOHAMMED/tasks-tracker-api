@@ -70,10 +70,10 @@ public class TaskListServiceTests {
                 .description("This is a study task list.").build();
 
         when(taskListRepository.findById(any(UUID.class))).thenReturn(Optional.of(taskList));
-        Optional<TaskList> returnedTaskList = taskListService.getTaskList(taskList.getId());
+        TaskList returnedTaskList = taskListService.getTaskList(taskList.getId());
 
         Assertions.assertThat(returnedTaskList).isNotNull();
-        Assertions.assertThat(returnedTaskList.get().getTitle()).isEqualTo("Study");
+        Assertions.assertThat(returnedTaskList.getTitle()).isEqualTo("Study");
 
     }
 

@@ -108,9 +108,9 @@ public class TaskListControllerTests {
     }
 
     @Test
-    public void TaskListController_GetTaskList_ReturnOptionalOfTaskList() throws  Exception{
+    public void TaskListController_GetTaskList_ReturnTaskList() throws  Exception{
         given(taskListMapper.toDto(any(TaskList.class))).willReturn(taskListDto);
-        given(taskListService.getTaskList(any(UUID.class))).willReturn(Optional.of(taskList));
+        given(taskListService.getTaskList(any(UUID.class))).willReturn(taskList);
 
         ResultActions resultActions = mockMvc.perform(get("/api/task-lists/" + taskList.getId())
                 .accept(MediaType.APPLICATION_JSON));
@@ -121,13 +121,13 @@ public class TaskListControllerTests {
     }
 
     @Test
-    public void TaskListController_GetTaskList_ReturnNotFound() throws  Exception{
-        given(taskListService.getTaskList(any(UUID.class))).willReturn(Optional.empty());
+    public void TaskListController_GetTaskList_ReturnOK() throws  Exception{
+        given(taskListService.getTaskList(any(UUID.class))).willReturn(null);
 
         ResultActions resultActions = mockMvc.perform(get("/api/task-lists/" + UUID.randomUUID())
                 .accept(MediaType.APPLICATION_JSON));
 
-        resultActions.andExpect(MockMvcResultMatchers.status().isNotFound());
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
