@@ -6,6 +6,7 @@ import com.hisham.tasks.domain.entities.TaskPriority;
 import com.hisham.tasks.domain.entities.TaskStatus;
 import com.hisham.tasks.exceptions.TaskAlreadyHasIdException;
 import com.hisham.tasks.exceptions.TaskListNotFoundException;
+import com.hisham.tasks.exceptions.TaskNotFoundException;
 import com.hisham.tasks.repositories.TaskListRepository;
 import com.hisham.tasks.repositories.TaskRepository;
 import com.hisham.tasks.services.TaskService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -61,5 +63,33 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Optional<Task> getTask(UUID taskListId, UUID taskId) {
            return taskRepository.findByTaskListIdAndId(taskListId, taskId);
+    }
+
+    @Override
+    public Task updateTask(UUID taskListId, UUID taskId, Task task) {
+        if(task.getId() == null){
+            throw new IllegalArgumentException("Task must have an ID!");
+        }
+        if(!Objects.equals(task.getId(), taskId)){
+            throw new IllegalArgumentException("Task IDs must match!");
+        }
+        if(task.getTaskPriority() == null){
+            throw new IllegalArgumentException("Task must have a valid priority!");
+        }
+        if(task.getTaskStatus() == null){
+            throw new IllegalArgumentException("Task must have a valid status");
+        }
+
+        Task existingTask = taskRepository.findByTaskListIdAndId(taskListId, taskId)
+                .orElseThrow(()-> new TaskNotFoundException("Task not found!"));
+
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDueDate(task.getDueDate());
+        existingTask.setTaskPriority(task.getTaskPriority());
+        existingTask.setTaskStatus(task.getTaskStatus());
+        existingTask.setUpdatedDate(LocalDateTime.now());
+
+        return taskRepository.save(existingTask);
     }
 }

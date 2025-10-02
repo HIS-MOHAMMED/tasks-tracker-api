@@ -44,4 +44,11 @@ public class TaskController {
                 .getTask(taskListId, taskId)
                 .map(taskMapper::toDto));
     }
+    @PutMapping(path = "/{task_id}")
+    public ResponseEntity<TaskDto> updateTask(@PathVariable("task_list_id") UUID taskListId, @PathVariable("task_id") UUID taskId, @RequestBody TaskDto taskDto){
+        return ResponseEntity.ok(taskMapper
+                .toDto(taskService
+                        .updateTask(taskListId, taskId,taskMapper
+                                .fromDto(taskDto))));
+    }
 }
