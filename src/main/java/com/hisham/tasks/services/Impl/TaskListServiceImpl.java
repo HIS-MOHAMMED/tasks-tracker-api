@@ -6,6 +6,7 @@ import com.hisham.tasks.exceptions.TaskListNotFoundException;
 import com.hisham.tasks.repositories.TaskListRepository;
 import com.hisham.tasks.services.TaskListService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ TaskListServiceImpl implements TaskListService {
         return taskListRepository.findAll();
     }
 
+    @Transactional
     @Override
     public TaskList createTaskList(TaskList taskList) {
        if(taskList.getId() != null){
@@ -53,6 +55,7 @@ TaskListServiceImpl implements TaskListService {
         return taskListRepository.findById(id).orElseThrow(()-> new TaskListNotFoundException("Task list not found !"));
     }
 
+    @Transactional
     @Override
     public Optional<TaskList> updateTaskList(UUID taskListId, TaskList taskList) {
         if(taskList.getId() == null){
